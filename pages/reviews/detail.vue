@@ -20,7 +20,7 @@ const horrorValue = ref(0);
 const storyValue = ref(0);
 const activityValue = ref(0);
 const scaleValue = ref(0);
-const lockDeviceRate = ref(0);
+const lockDeviceRate = ref(5);
 
 //input 게이지 이벤트
 const onRangeChange = (target) => {
@@ -45,24 +45,45 @@ const submitReview = () => {
     alert('제목과 내용을 입력해주세요.');
   }
 };
+
+
+// watch를 사용하여 value 값 변화 감지
+watch(lockDeviceRate, (newValue) => {
+  const gradientValue = 100 / 10;
+  const valuePercentage = gradientValue * newValue;
+
+  const rangeInput = document.querySelector('.rangeInput');
+  if (rangeInput) {
+    rangeInput.style.background = `
+      linear-gradient(
+        to right,
+        #FFA065 0%,
+        #FFA065 ${valuePercentage}%,
+        #62CEE7 ${valuePercentage}%,
+        #62CEE7 100%
+      )`;
+  }
+});
+  
 </script>
 
 <template>
-  <div>
+  <div class="mobile_wrap review_detail_wrap">
     <form @submit.prevent="submitReview">
-    <div>
-      <strong>{{ reviewStore.getStoreName }}</strong>
-      <p>{{ reviewStore.getEpName }}</p>
-      <p>{{ reviewStore.getTimeLimit }}</p>
+    <div class="review_store_info">
+      <div>
+        <strong>{{ reviewStore.getStoreName }}</strong>
+        <p>{{ reviewStore.getEpName }}</p>
+      </div>
+      <p>{{ reviewStore.getTimeLimit }}min</p>
     </div>
     <div>
-      test::: {{ reviewStore.escapeStatus }}
       <div v-if="reviewStore.escapeStatus == 'y'">
-        <input type="time" /> 
+        <img src="@/assets/images/reviews/escape_y.png" alt="탈출성공" />
         <p>남기고 성공!</p>
       </div>
       <div v-else>
-        
+        <img src="@/assets/images/reviews/escape_n.png" alt="탈출 실패" />
         <p>아쉽게 실패!</p>
       </div>
     </div>
@@ -113,7 +134,7 @@ const submitReview = () => {
           <p>장치 {{ 10 - lockDeviceRate }}</p>
         </div>
         <div>
-          <input type="range" id="level" min="0" max="10" step="1" v-model="lockDeviceRate">
+          <input type="range" class="rangeInput" id="level" min="0" max="10" step="1" v-model="lockDeviceRate">
         </div>
       </div>
       <div>이미지</div>
@@ -135,6 +156,97 @@ const submitReview = () => {
     </form>
   </div>
 </template>
-<style>
-  
-</style>
+
+<style lang="scss">
+  body{
+    background-color: #ddd;
+  }
+  .mobile_wrap{
+    width: 400px;
+    margin: 0 auto;
+    background-color: #fff;
+
+    p {
+      margin:0;
+    }
+  }
+
+  .review_detail_wrap{
+    padding: 20px 20px;
+    box-sizing: border-box;
+
+    .review_store_info{
+      display: inline-flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 20px;
+
+      div{
+        p{
+          margin-top:5px;
+        }
+      }
+
+      > p {
+        border-radius: 62px;
+        box-sizing: border-box;
+        background-color: #EEEEEE;
+        color: #1D1E20;
+        font-size:14px;
+        width: 62px;
+        height: 62px;
+        overflow: hidden;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+    }
+
+    input[type="range"] {
+      // 기존 디자인 삭제
+      // 크로스 브라우저를 위해 webkit(구글, 사파리), moz(파이어폭스) 접두어 사용
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      outline: none;
+        
+      // 원하는 디자인 적용
+      width: 60%;
+      height: 10px;
+        
+      border-radius: 15px;
+      background: #F5F6FA;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #3D93F8;
+      border-radius: 100%;
+      cursor: pointer;
+    }
+
+    input[type="range"].rangeInput {
+        // 기존 디자인 삭제
+        // 크로스 브라우저를 위해 webkit(구글, 사파리), moz(파이어폭스) 접두어 사용
+        width: 90%;
+        background: linear-gradient(to right, #FFA065 0%, #FFA065 50%, #62CEE7 50%, #62CEE7 100%);
+        border-radius: 8px;
+        outline: none;
+        transition: background 450ms ease-in;
+        -webkit-appearance: none;
+        accent-color: #D4D9DE;
+    }
+
+    input[type=range].rangeInput::-webkit-slider-thumb{
+      background: #D4D9DE;
+      border: 1px solid #fff;
+    }
+  }
+  </style>

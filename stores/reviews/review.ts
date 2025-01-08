@@ -58,7 +58,7 @@ export const useReviewStore = defineStore('reviewStore', {
       return "Ep.4 주인 없는 낡은 서점"
     },
     getTimeLimit: (state): number => {
-      return state.timeLimit;
+      return 75;
     },
     getStarCore: (state): number => {
       return state.starCore;

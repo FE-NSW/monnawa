@@ -49,7 +49,7 @@ const escaping = (val) => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   body{
     background-color: #ddd;
   }
@@ -99,6 +99,7 @@ const escaping = (val) => {
         justify-content: center;
         align-items: center;
         margin: 25px 0;
+        cursor: pointer;
 
         img {
           width: 102px;
