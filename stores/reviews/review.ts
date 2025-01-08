@@ -8,12 +8,12 @@ interface reviewState {
   resultTime: string, // 진행 시간 (시간을 입력하는게 지점에서 하거나 본인이 할 수 있어서 범용성있게 변경)
   isEscape: string, // 탈출 성공여부 'y', 'n', '' 기본값
   userName: string, // 유저명
-  starRate: number, // 별점(1~5)
+  starCore: number, // 별점(1~5)
   level: number, // 난이도(1~10)
-  horrorRate: number, // 공포점수(1~10)
-  storyRate: number, // 스토리점수(1~10)
-  activityRate: number, // 활동점수(1~10)
-  scaleRate: number // 스케일점수(1~10)
+  horrorCore: number, // 공포점수(1~10)
+  storyCore: number, // 스토리점수(1~10)
+  activityCore: number, // 활동점수(1~10)
+  scaleCore: number // 스케일점수(1~10)
 }
 
 // 스토어 정의
@@ -26,12 +26,12 @@ export const useReviewStore = defineStore('reviewStore', {
     resultTime: "",
     isEscape: "",
     userName: "",
-    starRate: 0,
+    starCore: 0,
     level: 0,
-    horrorRate: 0,
-    storyRate: 0,
-    activityRate: 0,
-    scaleRate: 0
+    horrorCore: 0,
+    storyCore: 0,
+    activityCore: 0,
+    scaleCore: 0
   }),
 
   // 액션 타입은 자동으로 추론됨
@@ -40,8 +40,11 @@ export const useReviewStore = defineStore('reviewStore', {
       this.isEscape = value;
     },
     startUpdate(value:number){
-      this.starRate = value;
-      console.log(this.starRate, value)
+      this.starCore = value;
+      console.log(this.starCore, value)
+    },
+    levelUpdate(value:number){
+      this.starCore = value;
     }
   },
 
@@ -57,8 +60,8 @@ export const useReviewStore = defineStore('reviewStore', {
     getTimeLimit: (state): number => {
       return state.timeLimit;
     },
-    getStarRate: (state): number => {
-      return state.starRate;
+    getStarCore: (state): number => {
+      return state.starCore;
     },
     escapeStatus: (state): string => {
       return state.isEscape;
