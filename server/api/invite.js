@@ -5,7 +5,7 @@ import {   supabase as supabase2 } from '~/server/utils/supabase';
 // Supabase URL 및 API 키 설정
 const supabaseUrl = `${process.env.SUPABASE_URL}/functions/v1/generate_invite`;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
+console.log('supabaseUrl ' )
 console.log('supabaseUrl ' + supabaseUrl)
 // Supabase 클라이언트 생성
 const supabase = createClient(supabaseUrl, supabaseKey);
