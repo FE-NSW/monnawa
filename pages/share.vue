@@ -1,5 +1,15 @@
+
 <template>
   <div class="page-container">
+
+    <!-- 이미지 업로드 폼 -->
+    <div v-if="!isLogin" class="upload-container">
+      <button @click="kakaoLoginCheck" >
+       로그인부터 해
+      </button>
+    </div>
+
+
     <h1>이미지 업로드 및 카카오 공유</h1>
     <p class="description">
       이미지를 업로드하고 결과를 확인한 후, 카카오톡으로 공유해보세요!
@@ -25,19 +35,110 @@
   </div>
 </template>
 <script>
+import { useSupabase } from '~/utils/supabase';
+
 export default {
   data() {
     return {
       selectedFile: null,
       isUploading: false,
       result: null, // 서버 응답 저장
-      isLoadKakao: false
+      isLoadKakao: false,
+      isLogin : false,
+      supabaseInstance : null,
+      supabaseToken : null
     };
   },
+
   mounted() {
+    this.supabaseInstance = useSupabase();
      this.loadKakaoSDK()
+
+    console.log("aaa" + this.checkUserLogin())
+    this.checkUserLogin().then(()=>{
+      // this.kakaoLoginCheck()
+    })
+
   },
   methods: {
+    async checkUserLogin() {
+
+      // Supabase에서 세션 확인
+      const { data: session, error } = await this.supabaseInstance.auth.getSession();
+
+      if (error) {
+        console.log("Error fetching session", error.message);
+        return null;  // 세션 가져오기 실패
+      }
+
+      // 세션이 존재하면 사용자 정보 반환
+      if (session) {
+        console.log("User is logged in", session.session.access_token);
+        this.supabaseToken = session.session.access_token
+        // return session.user;  // 로그인된 사용자 정보 반환
+
+        this.isLogin = true;
+        // resolve()
+        return null;
+      } else {
+        console.log("No valid session found");
+        return null;  // 로그인되지 않은 상태
+      }
+
+
+
+    },
+    kakaoLoginCheck() {
+
+      if(!this.isLoadKakao) {
+        window.Kakao.init('e12eae1007e7f69c2299165cf951acf4');
+        this.isLoadKakao = true;
+      }
+
+      console.log("kakaoLoginCheck");
+      window.Kakao.Auth.login({
+        success: async (authObj) => {
+
+          const { user, session, error } = await this.supabaseInstance.auth.signInWithOAuth({
+            provider: 'kakao',
+            options: {
+              redirectTo: `http://localhost:3000/share`,
+            },
+          });
+
+          // console.log(authObj.access_token);
+          // try {
+          //     // 서버로 액세스 토큰 전송
+          //   const response = await fetch('/api/auth/login', {
+          //     method: 'POST',
+          //     headers: {
+          //       'Content-Type': 'application/json',
+          //     },
+          //     body: JSON.stringify({ kakaoAccessToken: authObj.access_token }),
+          //   });
+          //
+          //   const data = await response.json();
+          //   if (response.ok) {
+          //     console.log(data)
+          //     return true;
+          //   } else {
+          //     return false;
+          //   }
+          //
+          // } catch (err) {
+          //   debugger
+          //   console.error('로그인 중 오류 발생:', err);
+          // }
+        },
+        fail: (err) => {
+          debugger
+          console.error('카카오 로그인 실패:', err);
+          alert('카카오 로그인 오류');
+        },
+      });
+
+
+    },
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file) {
@@ -61,6 +162,7 @@ export default {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${this.supabaseToken}`,
           },
           body: JSON.stringify({
             base64File,
@@ -72,7 +174,25 @@ export default {
         const data = await response.json();
         if (response.ok) {
           this.result = data; // 서버 응답 저장
-          this.shareToKakao()
+
+          const getRoomInfo = await fetch("/api/room/find", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: JSON.parse(data.message).savedData.id,
+            }),
+          });
+
+          const getRoomInfoResponse = await getRoomInfo.json();
+
+          if(getRoomInfo.ok) {
+            console.log(getRoomInfoResponse)
+            this.result = getRoomInfoResponse;
+            this.shareToKakao()
+          }
+
         } else {
           console.error("업로드 실패:", data);
           alert("업로드 중 오류가 발생했습니다!");
