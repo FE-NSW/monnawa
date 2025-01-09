@@ -102,7 +102,7 @@ export default {
           const { user, session, error } = await this.supabaseInstance.auth.signInWithOAuth({
             provider: 'kakao',
             options: {
-              redirectTo: `http://monnawa-gu731a8cc-devloads-projects.vercel.app/share`,
+              redirectTo: `https://monnawa-git-main-devloads-projects.vercel.app/share`,
             },
           });
 
