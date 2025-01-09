@@ -1,18 +1,9 @@
 <template>
   <div>
-    <h1>후기 페이지</h1>
-    <div v-if="reviews.length">
-      <ul>
-        <li v-for="review in reviews" :key="review.id">
-          <h3>{{ review.title }}</h3>
-          <p>{{ review.content }}</p>
-          <small>작성자: {{ review.author }}</small>
-        </li>
-      </ul>
-    </div>
-    <div v-else>
-      <p>후기가 없습니다.</p>
-    </div>
+    리뷰 목록 페이지입니다.
+    아직 내용이 없음
+
+    <NuxtLink to="/reviews/new">Go to review start</NuxtLink>
   </div>
 </template>
 

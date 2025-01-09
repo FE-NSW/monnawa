@@ -8,4 +8,9 @@ export default defineNuxtConfig({
       SUPABASE_ANON_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     },
   },
+   modules: ['@nuxtjs/google-fonts'],
+  css: [
+    '@/assets/css/global.css',
+  ]
+
 })
