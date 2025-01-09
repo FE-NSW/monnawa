@@ -10,7 +10,7 @@ const router = useRouter();
 
 // 리뷰할 가게 정보 불러오기
 onMounted(()=>{
-  const aa = reviewStore.getReviewInfol;
+  const aa = reviewStore.getReviewInfo;
 })
 
 // 후기 전송 함수
@@ -34,13 +34,13 @@ const escaping = (val) => {
       <ul>
         <li>
           <button class="no_border_btn active" type="button" @click="escaping('y')">
-            <img src="@/assets/images/reviews/escape_y.png" alt="탈출 성공">
+            <img src="@/assets/images/reviews/escape_y.png" alt="탈출 성공" />
             <span>탈출 성공~!</span>
           </button>
         </li>
         <li>
           <button class="no_border_btn" type="button" @click="escaping('n')">
-            <img src="@/assets/images/reviews/escape_n.png" alt="탈출 실패">
+            <img src="@/assets/images/reviews/escape_n.png" alt="탈출 실패" />
             <span>아깝다....실패...</span>
           </button>
         </li>
@@ -50,19 +50,6 @@ const escaping = (val) => {
 </template>
 
 <style lang="scss" scoped>
-  body{
-    background-color: #ddd;
-  }
-  .mobile_wrap{
-    width: 400px;
-    margin: 0 auto;
-    background-color: #fff;
-
-    p {
-      margin:0;
-    }
-  }
-
   .review_start_wrap{
     padding: 70px 40px 50px;
     box-sizing: border-box;

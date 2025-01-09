@@ -14,7 +14,13 @@ interface reviewState {
   storyCore: number, // 스토리점수(1~10)
   activityCore: number, // 활동점수(1~10)
   scaleCore: number // 스케일점수(1~10)
+  content: string // 리뷰내용
 }
+
+interface reviewr {
+  
+}
+
 
 // 스토어 정의
 export const useReviewStore = defineStore('reviewStore', {
@@ -26,12 +32,13 @@ export const useReviewStore = defineStore('reviewStore', {
     resultTime: "",
     isEscape: "",
     userName: "",
-    starCore: 0,
+    starCore: 1,
     level: 0,
     horrorCore: 0,
     storyCore: 0,
     activityCore: 0,
-    scaleCore: 0
+    scaleCore: 0,
+    content: ""
   }),
 
   // 액션 타입은 자동으로 추론됨
@@ -65,6 +72,9 @@ export const useReviewStore = defineStore('reviewStore', {
     },
     escapeStatus: (state): string => {
       return state.isEscape;
+    },
+    getContent: (state): string => {
+      return state.content;
     }
   }
 })
