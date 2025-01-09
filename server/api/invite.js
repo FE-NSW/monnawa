@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
-
+import {   supabase as supabase2 } from '~/server/utils/supabase';
 
 // Supabase URL 및 API 키 설정
 const supabaseUrl = `${process.env.SUPABASE_URL}/functions/v1/generate_invite`;
@@ -14,6 +14,9 @@ export default defineEventHandler(async (event) => {
 
     // Authorization 헤더에서 토큰을 추출
     const token = event.node.req.headers['authorization']?.split(' ')[1];  // 헤더 이름은 'authorization'이므로 소문자로 확인
+    const decoded = jwt.decode(token);
+    var userUid = decoded.sub;
+    console.log(JSON.stringify(decoded))
 
     if (event.node.req.method === 'POST') {
 
@@ -50,6 +53,30 @@ export default defineEventHandler(async (event) => {
                 user : token
             }),
         })
+
+        console.log(JSON.parse(data).savedData.id)
+
+
+
+        var invite_id = JSON.parse(data).savedData.id + '';
+        var user_id = userUid
+        console.log("ㅁㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ " + JSON.stringify({
+            invite_id ,
+            user_id,
+        }))
+        const { data:data2 , error:error2 } =  await supabase2
+            .from('invite_user') // 조회할 테이블 이름
+            .insert([
+                {
+                    invite_id,
+                    user_id,
+                },
+            ]);
+
+        if (error2) {
+            console.error(error2);
+            return { status: 500, message: 'Failed to fetch data', error2 };
+        }
 
         return new Response(JSON.stringify({ message: data }), { status: 200 });
 
