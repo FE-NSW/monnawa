@@ -1,0 +1,21 @@
+/* assets/styles/global.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+
+body{
+  font-family: 'Noto Sans', 'inter', 'Roboto', sans-serif;
+  background-color: #ddd;
+  padding:0;
+  margin:0;
+}
+
+.mobile_wrap{
+  width: 400px;
+  margin: 0 auto;
+  background-color: #fff;
+
+  p {
+    margin:0;
+  }
+}
