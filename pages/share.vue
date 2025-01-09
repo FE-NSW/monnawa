@@ -102,7 +102,7 @@ debugger
           const { user, session, error } = await this.supabaseInstance.auth.signInWithOAuth({
             provider: 'kakao',
             options: {
-              redirectTo: `https://monnawa-git-main-devloads-projects.vercel.app/share`,
+              redirectTo: `https://monnawa.vercel.app/share`,
             },
           });
 
