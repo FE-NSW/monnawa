@@ -98,7 +98,7 @@ export default {
       console.log("kakaoLoginCheck");
       window.Kakao.Auth.login({
         success: async (authObj) => {
-
+debugger
           const { user, session, error } = await this.supabaseInstance.auth.signInWithOAuth({
             provider: 'kakao',
             options: {
