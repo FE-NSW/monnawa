@@ -1,47 +1,149 @@
 <script setup>
-import { ref } from 'vue';
-import { useReviewStore } from '~/stores/reviews/review'
-import { useReviewerStore } from '~/stores/reviews/reviewer'
+import { ref, onMounted } from 'vue';
+import { reviewService } from '~/services/reviews/reviewService'
+import { userService } from '~/services/userService'
 
-// 스토어 불러오기
-const reviewStore = useReviewStore();
+// 본인 정보
+const userName = ref("");
+const userAge = ref("");
+const userGender = ref("");
+const userId = ref("");
+const userNickname = ref("");
 
-//리뷰어 정보 가져오기
-const reviewer = useReviewerStore();
+// 가게, 게임정보
+const invitationId = ref(0);
+const storeName = ref("");
+const storeEp = ref("");
+const epLimitTime = ref(0);
+const clear = ref("");
+const clearTime = ref("");
 
-const check = () => {
+// 방장 전용 남은 시간 입력
+const clearMin = ref("");
+const clearSec = ref("");
 
-}
-
+// 리뷰 입력내용
+const starCore = ref(0);
 const levelValue = ref(0);
 const horrorValue = ref(0);
 const storyValue = ref(0);
 const activityValue = ref(0);
 const scaleValue = ref(0);
 const lockDeviceRate = ref(5);
+const lockDeviceMax = ref(10);
 const content = ref("")
 
-//input 게이지 이벤트
-const onRangeChange = (target) => {
-  console.log(target)
-  if(target === 'level') {
-    // reviewStore.levelUpdate()
+// 선택된 태그 값을 저장할 배열
+const selectedTags = ref([]);
+
+// 체크박스 데이터
+const tags = [
+  { id: 'tag1', name: '아기자기 소품', label: '아기자기 소품' },
+  { id: 'tag2', name: '극공테', label: '극공테' },
+  { id: 'tag3', name: '친절한 가이드&몰입도', label: '친절한 가이드&몰입도' },
+  { id: 'tag4', name: '2인추천', label: '2인추천' },
+  { id: 'tag5', name: '스토리와 연출', label: '스토리와 연출' },
+  { id: 'tag6', name: '퍼즐문제', label: '퍼즐문제' },
+  { id: 'tag7', name: '풀꽃길', label: '풀꽃길' },
+];
+
+// 서비스 호출
+const { getClearGame } = reviewService();
+const { getUserInfo } = userService();
+
+onMounted(async () => {
+  try {
+    // 유저정보
+    const userInfo = await getUserInfo();
+    userName.value = userInfo.name
+    userAge.value = userInfo.age
+    userGender.value = userInfo.gender
+    userId.value = userInfo.id
+    userNickname.value = userInfo.nickname
+
+
+    //가게 정보 가져오기
+    const clearInfo = await getClearGame();
+
+    //초대아이디
+    invitationId.value = clearInfo.invitationId
+
+    //스토어 명
+    storeName.value = clearInfo.store
+    
+    // 진행한 에피소드
+    storeEp.value = clearInfo.episode
+
+    // 에피소드 리미트 타임
+    epLimitTime.value = clearInfo.limitTime
+
+    // 에피소드 클리어 여부
+    clear.value = clearInfo.clear
+
+    // 에피소드 클리어 남은 시간
+    clearTime.value = clearInfo.clearTime
+
+    console.log(clearInfo)
+  } catch (error) {
+    console.error('Failed to fetch reviews:', error);
   }
+});
 
+const startUpdate = (index) => {
+  starCore.value = index;
 }
-
 
 // 후기 전송 함수
 const submitReview = () => {
-  if (newReview.value.title && newReview.value.content) {
+  if (starCore.value !== 0) {
     // 실제 서버에 후기를 전송하는 코드
-    console.log('후기 제출:', newReview.value);
+    console.log(`
+      이름 : ${userName.value}
+      나이 : ${userAge.value}
+      성별 : ${userGender.value}
+      아이디 : ${userId.value}
+      별명 : ${userNickname.value}
+      초대아이디 : ${invitationId.value}
+      가게명 : ${storeName.value}
+      에피소드명 : ${storeEp.value}
+      클리어여부 : ${epLimitTime.value}
+      남은시간 : ${clearTime.value}
+      성공여부 : ${clear.value}
+      난이도: ${levelValue.value}
+      호러도: ${horrorValue.value}
+      스토리: ${storyValue.value}
+      활동성: ${activityValue.value}
+      스케일: ${scaleValue.value}
+      자물쇠: ${lockDeviceRate.value}
+      장치: ${lockDeviceMax.value - lockDeviceRate.value}
+      태그 : ${selectedTags.value}
+      리뷰내용 : ${content.value}
+    `);
+
+    if(!clearTime.value && clearMin.value && clearMin.value){
+      console.log(`
+      클리어 타임 없음
+        ${clearTime.value}
+        분 ${ clearMin.value }
+        초 ${ clearMin.value }
+      `)
+      clearTime.value = `${clearMin.value}분 ${ clearMin.value }초`
+      console.log(`
+      클리어 타임 없음
+        ${clearTime.value}
+        분 ${ clearMin.value }
+        초 ${ clearMin.value }
+      `)
+
+    } else {
+      alert('남은 시간을 넣어주세요!')
+      return;
+    }
     
-    // 후기를 작성 후 초기화
-    newReview.value = { title: '', content: '' };
     alert('후기가 작성되었습니다!');
   } else {
-    alert('제목과 내용을 입력해주세요.');
+    alert('후기를 다시 작성해주세요!');
+    return;
   }
 };
 
@@ -72,16 +174,24 @@ watch(lockDeviceRate, (newValue) => {
       <div class="review_detail_inner_wrap">
         <div class="review_store_info">
           <div>
-            <strong>{{ reviewStore.getStoreName }}</strong>
-            <p>{{ reviewStore.getEpName }}</p>
+            <strong>{{ storeName }}</strong>
+            <p>{{ storeEp }}</p>
           </div>
-          <p>{{ reviewStore.getTimeLimit }}min</p>
+          <p>{{ epLimitTime }}min</p>
         </div>
         <div>
-          <div v-if="reviewStore.escapeStatus == 'y'" class="result_time_wrap">
+          <div v-if="clear === 'y' && clearTime !== ''" class="result_time_wrap">
           <img src="@/assets/images/reviews/escape_y.png" alt="탈출성공" /> 
-          <div class="result_time">17분 32초</div>
+          <div class="result_time">{{ clearTime }}</div>
           <p>남기고 성공!</p>
+          </div>
+          <div v-else-if="clear === 'y' && clearTime === ''" class="result_time_wrap">
+            <img src="@/assets/images/reviews/escape_y.png" alt="탈출성공" /> 
+            <div class="result_time result_time_input_wrap">
+              <input type="number" v-model="clearMin" id="" min="1" max="60" step="1" />분
+              <input type="number" v-model="clearSec" id="" min="1" max="60" step="1" />초
+            </div>
+            <p>남기고 성공!</p>
           </div>
           <div v-else class="result_time_wrap">
             <img src="@/assets/images/reviews/escape_n.png" alt="탈출 실패" />
@@ -97,16 +207,16 @@ watch(lockDeviceRate, (newValue) => {
                   class="star"
                   v-for="index in 5"
                   :key="index"
-                  @click="reviewStore.startUpdate(index)"
+                  @click="startUpdate(index)"
                 >
-                  <button class="no_border_btn" v-if="index <= reviewStore.getStarCore"><img src="@/assets/images/reviews/star.png" alt="별점" width="44" /></button>
-                  <button class="no_border_btn" v-if="index > reviewStore.getStarCore"><img src="@/assets/images/reviews/star_de.png" alt="별점아님" width="44" /></button>
+                  <button class="no_border_btn" v-if="index <= starCore"><img src="@/assets/images/reviews/star.png" alt="별점" width="44" /></button>
+                  <button class="no_border_btn" v-if="index > starCore"><img src="@/assets/images/reviews/star_de.png" alt="별점아님" width="44" /></button>
                 </div>
               </div>
             </div>
           </div>
           <div>
-            <img :src="`/images/reviews/star${reviewStore.getStarCore}.png`" alt="" width="76" />
+            <img :src="`/images/reviews/star${starCore}.png`" alt="" width="76" />
           </div>
         </div>
         <div class="storeInputValuse">
@@ -136,7 +246,6 @@ watch(lockDeviceRate, (newValue) => {
             <dd class="input_value">{{ scaleValue }}</dd>
           </dl>
         </div>
-
         <div class="lock_device_wrap">
           <div>
             <img src="@/assets/images/reviews/lock_img.png" alt="자물쇠" width="54" />
@@ -154,15 +263,16 @@ watch(lockDeviceRate, (newValue) => {
             <img src="@/assets/images/reviews/device_img.png" alt="장치" width="54" />
           </div>
         </div>
-
         <div class="tags_wrap">
-          <div class="tag"><input type="checkbox" name="아기자기 소품" id="tag1"><label for="tag1">아기자기 소품</label></div>
-          <div class="tag"><input type="checkbox" name="극공테" id="tag2"><label for="tag2">극공테</label></div>
-          <div class="tag"><input type="checkbox" name="친절한 가이드&몰입도" id="tag3"><label for="tag3">친절한 가이드&몰입도</label></div>
-          <div class="tag"><input type="checkbox" name="2인추천" id="tag4"><label for="tag4">2인추천</label></div>
-          <div class="tag"><input type="checkbox" name="스토리와 연출" id="tag5"><label for="tag5">스토리와 연출</label></div>
-          <div class="tag"><input type="checkbox" name="퍼즐문제" id="tag6"><label for="tag6">퍼즐문제</label></div>
-          <div class="tag"><input type="checkbox" name="풀꽃길" id="tag7"><label for="tag7">풀꽃길</label></div>
+          <div class="tag" v-for="tag in tags" :key="tag.id">
+            <input 
+              type="checkbox" 
+              :id="tag.id" 
+              :value="tag.name" 
+              v-model="selectedTags"
+            />
+            <label :for="tag.id">{{ tag.label }}</label>
+          </div>
         </div>
         <div class="content_wrap">
           <label for="content">리뷰 더 써보세영</label>
@@ -192,6 +302,11 @@ watch(lockDeviceRate, (newValue) => {
       
       img{
         width:54px;
+      }
+      
+      .result_time_input_wrap{
+        display: flex;
+        align-items: center;
       }
 
       .result_time{
