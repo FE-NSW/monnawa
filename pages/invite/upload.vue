@@ -167,8 +167,8 @@ const setReservationData = async (file) => {
           {
             title: '초대 수락하기', // 버튼 제목
             link: {
-              mobileWebUrl: `${url}/invite/invitation?roomId=${result.data[0].id}`, // 모바일 웹 예약 링크
-              webUrl: `${url}/invite/invitation?roomId=${result.data[0].id}`, // 데스크탑 웹 예약 링크
+              mobileWebUrl: `${url}/invite/invitation/${result.data[0].id}`, // 모바일 웹 예약 링크
+              webUrl: `${url}/invite/invitation/${result.data[0].id}`, // 데스크탑 웹 예약 링크
             },
           }
         ],
