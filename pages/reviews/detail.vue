@@ -120,19 +120,19 @@ const submitReview = () => {
       리뷰내용 : ${content.value}
     `);
 
-    if(!clearTime.value && clearMin.value && clearMin.value){
+    if(!clearTime.value && clearMin.value && clearSec.value){
       console.log(`
       클리어 타임 없음
         ${clearTime.value}
         분 ${ clearMin.value }
-        초 ${ clearMin.value }
+        초 ${ clearSec.value }
       `)
-      clearTime.value = `${clearMin.value}분 ${ clearMin.value }초`
+      clearTime.value = `${clearMin.value}분 ${ clearSec.value }초`
       console.log(`
       클리어 타임 없음
         ${clearTime.value}
         분 ${ clearMin.value }
-        초 ${ clearMin.value }
+        초 ${ clearSec.value }
       `)
 
     } else {
