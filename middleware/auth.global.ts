@@ -1,5 +1,9 @@
 import { sessionUtil } from '~/services/sessionUtil';
 export default defineNuxtRouteMiddleware( async (to, from) => {
+  // 서버사이드 미들웨어 진입 방지
+  if (process.server) {
+    return;
+  }
   
   //로그인 토큰 여부 확인
   const token = await sessionUtil().getToken();
