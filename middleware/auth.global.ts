@@ -21,12 +21,12 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
       redirectUrl = "/";
     }
     debugger
-    return navigateTo(`/login?redirectUrl=${redirectUrl}`);
+    return location.replace(`/login?redirectUrl=${redirectUrl}`);
   }
 
   // 로그인 상태에서 redirectUrl이 있는 경우 해당 URL로 리다이렉트
   if (token && to.query.redirectUrl) {
     console.log('Redirecting to:', to.query.redirectUrl);
-    return navigateTo(to.query.redirectUrl as string);
+    return location.replace(to.query.redirectUrl as string);
   }
 });
