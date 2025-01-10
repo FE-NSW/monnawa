@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { sessionUtil } from '~/services/sessionUtil';
 
 const isDragging = ref(false);
 const file = ref(null);
@@ -39,7 +40,7 @@ const onFileChange = (event) => {
   }
 
   // 예약정보 가져오기(더미데이터 가져오기)
-  setReservationData();
+  setReservationData(selectedFile);
   isDragging.value = false;
 };
 
@@ -73,12 +74,152 @@ const kakaoShare = () => {
 };
 
 //이미지 정보 가져오기
-const setReservationData = () => {
-  //더미 데이터
-  reservationDate.value = "2025. 1. 11 (토) 오후 5시"
-  reservationStore.value = "KEYESCAPE 홍대점"
-  reservationEp.value = "Ep.4 주인 없는 낡은 서점"
+const setReservationData = async (file) => {
+
+
+  try {
+    // 파일을 Base64로 변환
+    const base64File = await convertFileToBase64(file);
+    debugger
+    const token = await sessionUtil().getToken();
+
+    // 서버에 업로드
+    const response = await fetch("/api/invite", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        base64File,
+        filename: file.name,
+        fileType: file.type,
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      var result = data; // 서버 응답 저장
+
+      const getRoomInfo = await fetch("/api/room/find", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: JSON.parse(data.message).savedData.id,
+        }),
+      });
+
+      const getRoomInfoResponse = await getRoomInfo.json();
+
+      if(getRoomInfo.ok) {
+        console.log(getRoomInfoResponse)
+        result = getRoomInfoResponse;
+
+      }
+
+      console.log(result);
+      reservationDate.value = result.data[0].date + " " + result.data[0].time
+      reservationStore.value = result.data[0].company
+      reservationEp.value = result.data[0].theme
+
+      debugger
+      window.Kakao.init('e12eae1007e7f69c2299165cf951acf4');
+
+      const url = 'https://service.monnawa.com'
+      // const url = 'https://localhost:3000'
+
+      window.Kakao.Share.createDefaultButton({
+        container: '.share_btn', // 버튼을 띄울 container ID
+        objectType: 'feed', // 피드를 사용할 경우
+        content: {
+          title: '방탈출 초대', // 초대 메시지 제목
+          description: '함께 방탈출 게임에 참여하세요!', // 초대 메시지 설명
+          imageUrl: 'https://i.namu.wiki/i/U1qmv3XECFOncsb0JFpMQbPn72UJ3VxNuZWrlBry5h36wdWM1CMmk2wt7QWpTSKcTVjPAnPwTFjxkzWS_phXfg.webp', // 초대에 사용할 이미지 URL
+          link: {
+            mobileWebUrl: 'https://www.monnawa.com/', // 모바일 웹 URL
+            webUrl: 'https://www.monnawa.com/', // 데스크탑 웹 URL
+          },
+        },
+        itemContent: {
+          profileText: '방탈출 초대', // 프로필 텍스트
+          profileImageUrl: 'https://media.istockphoto.com/id/1218944059/ko/%EB%B2%A1%ED%84%B0/%EB%B9%88-%EA%B2%BD%EC%B0%B0-%EC%BA%90%EB%B9%84%EB%8B%9B-%ED%8F%89%EB%A9%B4-%EB%B2%A1%ED%84%B0-%EA%B7%B8%EB%A6%BC%EC%9E%85%EB%8B%88%EB%8B%A4-%ED%83%88%EC%B6%9C-%EB%B0%A9-%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4-%ED%83%90%EC%A0%95-%EC%A7%81%EC%9E%A5-%EB%B2%94%EC%A3%84-%EC%88%98%EC%82%AC-%EB%AF%B8%EC%8A%A4%ED%84%B0%EB%A6%AC-%ED%95%B4%EA%B2%B0-%ED%80%98%EC%8A%A4%ED%8A%B8-%EB%A3%B8-%ED%98%84%EB%8C%80-%EC%97%94%ED%84%B0%ED%85%8C%EC%9D%B8%EB%A8%BC%ED%8A%B8-%EC%A1%B0%EC%82%AC-%EA%B2%8C%EC%9E%84.jpg?s=612x612&w=0&k=20&c=27d-8S47AYftovRz355Id1wq777VYWVaOxSw0hlx140=', // 프로필 이미지 URL
+          titleImageUrl: 'https://media.istockphoto.com/id/1218944059/ko/%EB%B2%A1%ED%84%B0/%EB%B9%88-%EA%B2%BD%EC%B0%B0-%EC%BA%90%EB%B9%84%EB%8B%9B-%ED%8F%89%EB%A9%B4-%EB%B2%A1%ED%84%B0-%EA%B7%B8%EB%A6%BC%EC%9E%85%EB%8B%88%EB%8B%A4-%ED%83%88%EC%B6%9C-%EB%B0%A9-%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4-%ED%83%90%EC%A0%95-%EC%A7%81%EC%9E%A5-%EB%B2%94%EC%A3%84-%EC%88%98%EC%82%AC-%EB%AF%B8%EC%8A%A4%ED%84%B0%EB%A6%AC-%ED%95%B4%EA%B2%B0-%ED%80%98%EC%8A%A4%ED%8A%B8-%EB%A3%B8-%ED%98%84%EB%8C%80-%EC%97%94%ED%84%B0%ED%85%8C%EC%9D%B8%EB%A8%BC%ED%8A%B8-%EC%A1%B0%EC%82%AC-%EA%B2%8C%EC%9E%84.jpg?s=612x612&w=0&k=20&c=27d-8S47AYftovRz355Id1wq777VYWVaOxSw0hlx140=', // 제목 이미지 URL
+          titleImageText: reservationEp.value, // 제목 이미지 텍스트
+          titleImageCategory: reservationDate.value, // 제목 이미지 카테고리
+          items: [
+            {
+              item: '장소', // 항목 이름
+              itemOp: reservationStore.value
+            },
+            {
+              item: '테마',
+              itemOp: reservationEp.value
+            },
+            {
+              item: '날짜',
+              itemOp: reservationDate.value
+            },
+          ],
+        },
+        buttons: [
+          {
+            title: '초대 수락하기', // 버튼 제목
+            link: {
+              mobileWebUrl: `${url}/invite/invitation?roomId=${result.data[0].id}`, // 모바일 웹 예약 링크
+              webUrl: `${url}/invite/invitation?roomId=${result.data[0].id}`, // 데스크탑 웹 예약 링크
+            },
+          }
+        ],
+      });
+
+    } else {
+      console.error("업로드 실패:", data);
+      alert("업로드 중 오류가 발생했습니다!");
+    }
+  } catch (error) {
+    console.error("업로드 중 에러 발생:", error);
+    alert("업로드 중 오류가 발생했습니다!");
+  } finally {
+    // this.isUploading = false;
+  }
+
+
+//   //더미 데이터
+//   reservationDate.value = "2025. 1. 11 (토) 오후 5시"
+//   reservationStore.value = "KEYESCAPE 홍대점"
+//   reservationEp.value = "Ep.4 주인 없는 낡은 서점"
 }
+
+const convertFileToBase64 =  (file) => {
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]); // Base64 데이터만 추출
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
+
+const loadKakaoSDK = async () => {
+  return new Promise((resolve, reject) => {
+    console.log("window.Kakao" + window.Kakao)
+    if (window.Kakao) {
+      resolve();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://developers.kakao.com/sdk/js/kakao.js';
+      script.onload = resolve;
+      script.onerror = reject;
+
+
+      document.head.appendChild(script);
+    }
+  });
+}
+
+loadKakaoSDK()
 </script>
 
 <template>

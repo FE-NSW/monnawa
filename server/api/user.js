@@ -3,9 +3,9 @@ import { supabase } from '~/server/utils/supabase';
 export default defineEventHandler(async (event) => {
 
     // Authorization 헤더에서 토큰을 추출
-    const token = event.node.req.headers['authorization']?.split(' ')[1];  // 헤더 이름은 'authorization'이므로 소문자로 확인
+    // const token = event.node.req.headers['authorization']?.split(' ')[1];  // 헤더 이름은 'authorization'이므로 소문자로 확인
 
-    console.log(token)
+    // console.log(token)
 
     try {
 

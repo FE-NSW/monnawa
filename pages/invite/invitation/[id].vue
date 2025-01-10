@@ -3,7 +3,6 @@ import { ref } from "vue";
 
 const invitation = ref(false);
 import { roomService } from '/services/room/roomService'
-import { userService } from '/services/userService'
 
 import { useRoute } from 'vue-router';
 
@@ -16,39 +15,29 @@ const reservationLeader = ref("")
 const reservationDate = ref("")
 const reservationStore = ref("")
 const reservationEp = ref("")
-const roomId = ref("")
 
 onMounted(() => {
   getReservationData();
-
+  
 })
 
 
-const { getRoom, join } = roomService();
-const { getUserInfo } = userService();
+const { getRoom } = roomService();
 //이미지 정보 가져오기
 const getReservationData = async () => {
 
-  const roomInfo = await getRoom({id: id});
+  const roomInfo = await getRoom({id:id});
   console.log(roomInfo);
-
-  const inviteUserInfo = await getUserInfo({id: roomInfo.data[0].room_user});
-  console.log(inviteUserInfo);
-
   //더미 데이터
-  reservationLeader.value = inviteUserInfo.user.user.identities[0].identity_data.name
-  reservationDate.value = roomInfo.data[0].date + " " +roomInfo.data[0].time
-  reservationStore.value = roomInfo.data[0].company
-  reservationEp.value = roomInfo.data[0].theme
-
-  roomId.value = roomInfo.data[0].id;
+  reservationLeader.value = "노티미"
+  reservationDate.value = "2025. 1. 11 (토) 오후 5시"
+  reservationStore.value = "KEYESCAPE 홍대점"
+  reservationEp.value = "Ep.4 주인 없는 낡은 서점"
 }
 
 // 초대한 게임 참석하기
 const togethrPlay = () => {
-  join({id: roomId.value}).then(()=> {
-    console.log("success")
-  })
+
 }
 </script>
 
@@ -62,8 +51,8 @@ const togethrPlay = () => {
 
       <div class="card">
         <div class="inner">
-          <div class="front"><img class="card" src="@/assets/images/invite/card.png" alt="카드 앞면" width="197"/></div>
-          <div class="back"><img class="card" src="@/assets/images/invite/card_back.png" alt="카드 뒷면" width="197"/></div>
+          <div class="front"><img class="card" src="@/assets/images/invite/card.png" alt="카드 앞면" width="197" /></div>
+          <div class="back"><img class="card" src="@/assets/images/invite/card_back.png" alt="카드 뒷면" width="197" /></div>
         </div>
       </div>
 
@@ -89,9 +78,8 @@ const togethrPlay = () => {
   padding: 20px;
   font-family: 'Noto Sans', sans-serif;
 }
-
-.invitation_message {
-  text-align: center;
+.invitation_message{
+  text-align: center;  
   font-size: 26px;
   padding-top: 40px;
   padding-bottom: 20px;
@@ -105,9 +93,9 @@ const togethrPlay = () => {
   margin-top: -8px;
 }
 
-.details {
-  padding: 20px;
-  font-size: 16px;
+.details{
+  padding:20px;
+  font-size:16px;
   font-weight: 400;
 }
 
@@ -121,11 +109,11 @@ const togethrPlay = () => {
   align-items: center;
 }
 
-.details p:last-child {
-  border-bottom: 0;
+.details p:last-child{
+  border-bottom:0;
 }
 
-.details p strong {
+.details p strong{
   padding-right: 20px;
 }
 
@@ -136,8 +124,8 @@ const togethrPlay = () => {
   text-align: left;
 }
 
-.info_wrap strong, .details p strong {
-  font-weight: 400;
+.info_wrap strong, .details p strong{
+ font-weight: 400;
 }
 
 .card {
@@ -191,15 +179,15 @@ const togethrPlay = () => {
   }
 }
 
-.share_btn {
+.share_btn{
   display: block;
-  width: 100%;
+  width:100%;
   background-color: #FF624E;
   font-size: 16px;
   border-radius: 8px;
   overflow: hidden;
   border: 0;
-  padding: 15px 20px;
-  color: #fff;
+  padding:15px 20px;
+  color:#fff;
 }
 </style>

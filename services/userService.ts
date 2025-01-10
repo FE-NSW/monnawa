@@ -1,16 +1,24 @@
 import { useNuxtApp } from '#app';
+import {sessionUtil} from "~/services/sessionUtil";
 
 export const userService = () => {
   const { $axios } = useNuxtApp();
 
   // 리뷰 데이터를 가져오는 API 호출 함수
-  const getUserInfo = async () => {
+  const getUserInfo = async (data) => {
+    const token = await sessionUtil().getToken();
+    const url = "/api/user"; // API URL
+    const headers = {
+      Authorization: `Bearer ${token}`, // 토큰 추가
+      "Content-Type": "application/json",
+    };
+
     try {
-      const { data } = await $axios.get('/json/user.json'); // API 경로로 변경
-      return data;
+      const response = await $axios.post(url, data, { headers });
+      return response.data; // 성공 시 서버 응답 반환
     } catch (error) {
-      console.error('Error fetching reviews:', error);
-      throw error; // 오류가 발생한 경우, 상위에서 처리할 수 있도록 예외 던지기
+      console.error("리뷰 작성 실패:", error);
+      throw error; // 에러 발생 시 호출부에서 처리
     }
   };
 
