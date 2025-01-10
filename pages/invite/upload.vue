@@ -219,7 +219,9 @@ const loadKakaoSDK = async () => {
   });
 }
 
-loadKakaoSDK()
+onMounted(async ()=>{
+  await loadKakaoSDK()
+})
 </script>
 
 <template>
