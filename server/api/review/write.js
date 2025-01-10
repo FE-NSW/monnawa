@@ -23,6 +23,20 @@ export default defineEventHandler(async (event) => {
         success_status
     } = body;
 
+    console.log({
+        user_id,
+        invite_id,
+        clear_status,
+        difficulty,
+        horror_level,
+        story_rating,
+        activity_level,
+        scale_rating,
+        lock_rating,
+        device_rating,
+        tags,
+        review_content,
+    })
     // reviews 테이블에 데이터 삽입
     const { data: reviewData, error: reviewError } = await supabase
         .from('reviews')

@@ -1,4 +1,6 @@
 <script setup>
+import { useSupabase } from '~/utils/supabase';
+
 const tokenResult = ref('');
 const KAKAO_CLIENT_ID= "d33fc8194f841107da6fa80f48b04a69";
 const REDIRECT_URI= "http://localhost:3000/login";
@@ -16,16 +18,22 @@ onMounted(() => {
   document.head.appendChild(script);
 })
 
-const redirectToKakaoLogin = () => {
+const  redirectToKakaoLogin = async () => {
 
+  const { user, session, error } = await useSupabase().auth.signInWithOAuth({
+    provider: 'kakao',
+    options: {
+      redirectTo: `http://localhost:3000`,
+    },
+  });
 
   //const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID; // 카카오 REST API 키
   //const REDIRECT_URI = process.env.KAKAO_REDIRECT_URI; // 리디렉션 URI
 
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
-  Kakao.Auth.authorize({
-      redirectUri: REDIRECT_URI
-    });
+  // const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
+  // Kakao.Auth.authorize({
+  //     redirectUri: REDIRECT_URI
+  //   });
   // window.location.href = kakaoAuthUrl;
 };
 

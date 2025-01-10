@@ -48,7 +48,7 @@ const tags = [
 ];
 
 // 서비스 호출
-const { getClearGame } = reviewService();
+const { getClearGame, writeReview } = reviewService();
 const { getUserInfo } = userService();
 
 onMounted(async () => {
@@ -93,6 +93,8 @@ const startUpdate = (index) => {
   starCore.value = index;
 }
 
+
+
 // 후기 전송 함수
 const submitReview = () => {
   if (starCore.value !== 0) {
@@ -135,11 +137,31 @@ const submitReview = () => {
         초 ${ clearSec.value }
       `)
 
+      const reviewData = {
+        invite_id: invitationId.value,
+        clear_status: clear.value === "y" ? 1 : 0, // Boolean 값 변환
+        difficulty: levelValue.value,
+        horror_level: horrorValue.value,
+        story_rating: storyValue.value,
+        activity_level: activityValue.value,
+        scale_rating: scaleValue.value,
+        lock_rating: lockDeviceRate.value,
+        device_rating: lockDeviceRate.value, // 동일한 값 사용
+        tags: [], // 태그는 비워두거나 UI에서 추가 가능
+        review_content: '', // 리뷰 내용 추가 필요
+        remaining_time: clearTime.value,
+        success_status: clear.value === '성공'
+      };
+
+      writeReview(reviewData)
+
+
     } else {
       alert('남은 시간을 넣어주세요!')
       return;
     }
-    
+
+
     alert('후기가 작성되었습니다!');
   } else {
     alert('후기를 다시 작성해주세요!');
