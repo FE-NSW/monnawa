@@ -4,12 +4,15 @@ import { useSupabase } from '~/utils/supabase';
 export const sessionUtil = () => {
   const { $axios } = useNuxtApp();
 
-  // 리뷰 데이터를 가져오는 API 호출 함수
+  // 토큰 가져오는 api
   const getToken = async () => {
-debugger
     const { data: session, error } = await useSupabase().auth.getSession();
-    
-    return session.session.access_token
+
+    if(session.session){
+      return session.session.access_token
+    }
+
+    return null;
   };
 
   return {
