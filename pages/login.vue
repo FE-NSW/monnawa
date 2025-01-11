@@ -1,22 +1,24 @@
 <script setup>
 import { useSupabase } from '~/utils/supabase';
-
+import { userService } from '/services/userService'
 const tokenResult = ref('');
 const KAKAO_CLIENT_ID= "d33fc8194f841107da6fa80f48b04a69";
 const REDIRECT_URI= "http://localhost:3000/login";
 
 
-
-
+const {updateUser} = userService;
 const  redirectToKakaoLogin = async () => {
 
   const queryParams = new URLSearchParams(window.location.search);
-  const redirectUrl = queryParams.get('redirectUrl')
+  const redirectUrl = queryParams.get('redirectUrl') || '/'
   console.log('redirectUrl' + redirectUrl)
+  console.log("${window.location.protocol}//${window.location.hostname}")
+
+debugger
   const { user, session, error } = await useSupabase().auth.signInWithOAuth({
     provider: 'kakao',
     options: {
-      redirectTo: redirectUrl,
+      redirectTo: `${window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : "")}/auth/callback?rul=${redirectUrl}`,
     },
   });
 

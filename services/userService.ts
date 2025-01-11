@@ -22,7 +22,20 @@ export const userService = () => {
     }
   };
 
+  const updateUser = async (data, token) => {
+    const response = await $fetch('/api/userOn', {
+      method: 'POST',
+      body: data,
+    });
+
+    if (response.success) {
+      console.log('User added successfully:', response.data);
+    } else {
+      console.error('Error adding user:', response.error);
+    }
+  }
+
   return {
-    getUserInfo
+    getUserInfo, updateUser
   };
 };

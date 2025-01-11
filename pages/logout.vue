@@ -29,7 +29,6 @@ const kakaoLogout = async () => {
     console.error('로그아웃 실패:', error.message);
   } else {
     console.log('로그아웃 성공');
-    debugger
     const queryParams = new URLSearchParams(window.location.search);
     const redirectUrl = queryParams.get('redirectUrl') || "/"
     window.location.href = redirectUrl; // 홈으로 리다이렉트
