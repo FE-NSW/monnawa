@@ -17,6 +17,7 @@ const reservationDate = ref("")
 const reservationStore = ref("")
 const reservationEp = ref("")
 const roomId = ref("")
+const userProfileImages = ref([])  // 여러 명의 프로필 이미지 저장
 
 onMounted(() => {
   getReservationData();
@@ -34,6 +35,7 @@ const getReservationData = async () => {
 
   const inviteUserInfo = await getUserInfo({id: roomInfo.data[0].room_user});
   console.log(inviteUserInfo);
+  userProfileImages.value = roomInfo.data[1].users.map(user => user.profile_image || "@/assets/images/invite/default_profile.png");  // 기본 이미지 설정
 
   //더미 데이터
   reservationLeader.value = inviteUserInfo.user.user.identities[0].identity_data.name
@@ -60,12 +62,18 @@ const togethrPlay = () => {
         <p>예약에 초대합니다.</p>
       </div>
 
-      <div class="card">
+      <!-- 카드 하나로 처리, userProfileImages 배열을 순회하면서 이미지 넣기 -->
+      <div v-for="(profileImage, index) in userProfileImages" :key="index" class="card">
         <div class="inner">
-          <div class="front"><img class="card" src="@/assets/images/invite/card.png" alt="카드 앞면" width="197"/></div>
-          <div class="back"><img class="card" src="@/assets/images/invite/card_back.png" alt="카드 뒷면" width="197"/></div>
+          <div class="front">
+            <img class="card" :src="profileImage" alt="카드 앞면" width="197"/>
+          </div>
+          <div class="back">
+            <img class="card" src="@/assets/images/invite/card_back.png" alt="카드 뒷면" width="197"/>
+          </div>
         </div>
       </div>
+
 
       <!-- 예약 정보 -->
       <!-- 이미지 분석후 파일 데이터 추가 -->
