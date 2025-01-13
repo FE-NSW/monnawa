@@ -231,48 +231,46 @@ onMounted(async ()=>{
 </script>
 
 <template>
-  <div class="mobile_wrap">
-    <div class="container">
-      <strong class="upload_title">MONNAWA 초대장보내기</strong>
-      <!-- 드래그 앤 드롭 영역 -->
-      <div
-        class="dropzone"
-        @dragover.prevent="onDragOver"
-        @dragleave="onDragLeave"
-        @drop.prevent="onDrop"
-        @click="triggerFileInput"
-        :class="{ 'dropzone--active': isDragging }"
-      >
-        <div v-if="!file" class="placeholder">
-          <img class="drop_icon" src="@/assets/images/invite/upload_icon.png" alt="Upload Icon" width="118" />
-          <p>예약 이미지를 첨부해주세요.</p>
-          <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-        </div>
-        <div v-else class="uploaded-info">
-          <img :src="filePreview" alt="Uploaded Preview" />
-        </div>
-        <input type="file" class="file-input" ref="fileInput" @change="onFileChange" accept=".gif, .jpg, .png, .webp, .jpeg" />
+  <div class="container">
+    <strong class="upload_title">MONNAWA 초대장보내기</strong>
+    <!-- 드래그 앤 드롭 영역 -->
+    <div
+      class="dropzone"
+      @dragover.prevent="onDragOver"
+      @dragleave="onDragLeave"
+      @drop.prevent="onDrop"
+      @click="triggerFileInput"
+      :class="{ 'dropzone--active': isDragging }"
+    >
+      <div v-if="!file" class="placeholder">
+        <img class="drop_icon" src="@/assets/images/invite/upload_icon.png" alt="Upload Icon" width="118" />
+        <p>예약 이미지를 첨부해주세요.</p>
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       </div>
-      <hr />
-
-      <!-- 예약 정보 -->
-      <!-- 이미지 분석후 파일 데이터 추가 -->
-      <div class="info_wrap">
-        <div v-if="file"  class="info">
-          <strong>예약정보를 확인해주세요.</strong>
-          <div class="details">
-            <p><strong>날짜</strong><span>{{ reservationDate }}</span></p>
-            <p><strong>장소</strong><span>{{ reservationStore }}</span></p>
-            <p><strong>테마</strong><span>{{ reservationEp }}</span></p>
-          </div>
-          <p class="note">*예약정보가 틀리면 다시 한번 이미지를 첨부해주세요.</p>
-        </div>
-        <div v-else>
-          <p class="info_message">파일을 업로드 해주시면 예약정보가 나타납니다.</p>
-        </div>
+      <div v-else class="uploaded-info">
+        <img :src="filePreview" alt="Uploaded Preview" />
       </div>
-      <button class="share_btn" @click="kakaoShare">카카오톡 공유하기</button>
+      <input type="file" class="file-input" ref="fileInput" @change="onFileChange" accept=".gif, .jpg, .png, .webp, .jpeg" />
     </div>
+    <hr />
+
+    <!-- 예약 정보 -->
+    <!-- 이미지 분석후 파일 데이터 추가 -->
+    <div class="info_wrap">
+      <div v-if="file"  class="info">
+        <strong>예약정보를 확인해주세요.</strong>
+        <div class="details">
+          <p><strong>날짜</strong><span>{{ reservationDate }}</span></p>
+          <p><strong>장소</strong><span>{{ reservationStore }}</span></p>
+          <p><strong>테마</strong><span>{{ reservationEp }}</span></p>
+        </div>
+        <p class="note">*예약정보가 틀리면 다시 한번 이미지를 첨부해주세요.</p>
+      </div>
+      <div v-else>
+        <p class="info_message">파일을 업로드 해주시면 예약정보가 나타납니다.</p>
+      </div>
+    </div>
+    <button class="share_btn" @click="kakaoShare">카카오톡 공유하기</button>
   </div>
 </template>
 

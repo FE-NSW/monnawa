@@ -24,7 +24,7 @@ const escaping = (val) => {
 </script>
 
 <template>
-  <div class="mobile_wrap review_start_wrap">
+  <div class="review_start_wrap">
     <div class="review_store_info">
       <strong>{{ reviewStore.getStoreName }}</strong>
       <p>{{ reviewStore.getEpName }}</p>

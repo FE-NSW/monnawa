@@ -9,6 +9,8 @@ const isLoading = computed(() => loadingStore.getLoading);
 </script>
 
 <template>
-  <NuxtPage />
+  <div class="wrapper">
+    <NuxtPage />
+  </div>
   <loading v-if="isLoading" />
 </template>

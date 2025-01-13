@@ -191,7 +191,7 @@ watch(lockDeviceRate, (newValue) => {
 </script>
 
 <template>
-  <div class="mobile_wrap review_detail_wrap">
+  <div class="review_detail_wrap">
     <form @submit.prevent="submitReview">
       <div class="review_detail_inner_wrap">
         <div class="review_store_info">

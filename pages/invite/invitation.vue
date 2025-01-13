@@ -55,39 +55,37 @@ const togethrPlay = () => {
 </script>
 
 <template>
-  <div class="mobile_wrap">
-    <div class="container invitation">
-      <div class="invitation_message">
-        <strong>{{ reservationLeader }}님의</strong>
-        <p>예약에 초대합니다.</p>
-      </div>
-
-      <!-- 카드 하나로 처리, userProfileImages 배열을 순회하면서 이미지 넣기 -->
-      <div v-for="(profileImage, index) in userProfileImages" :key="index" class="card">
-        <div class="inner">
-          <div class="front">
-            <img class="card" :src="profileImage" alt="카드 앞면" width="197"/>
-          </div>
-          <div class="back">
-            <img class="card" src="@/assets/images/invite/card_back.png" alt="카드 뒷면" width="197"/>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- 예약 정보 -->
-      <!-- 이미지 분석후 파일 데이터 추가 -->
-      <div class="info_wrap">
-        <div class="info">
-          <div class="details">
-            <p><strong>날짜</strong><span>{{ reservationDate }}</span></p>
-            <p><strong>장소</strong><span>{{ reservationStore }}</span></p>
-            <p><strong>테마</strong><span>{{ reservationEp }}</span></p>
-          </div>
-        </div>
-      </div>
-      <button class="share_btn" @click="togethrPlay">함께 할게요!</button>
+  <div class="container invitation">
+    <div class="invitation_message">
+      <strong>{{ reservationLeader }}님의</strong>
+      <p>예약에 초대합니다.</p>
     </div>
+
+    <!-- 카드 하나로 처리, userProfileImages 배열을 순회하면서 이미지 넣기 -->
+    <div v-for="(profileImage, index) in userProfileImages" :key="index" class="card">
+      <div class="inner">
+        <div class="front">
+          <img class="card" :src="profileImage" alt="카드 앞면" width="197"/>
+        </div>
+        <div class="back">
+          <img class="card" src="@/assets/images/invite/card_back.png" alt="카드 뒷면" width="197"/>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 예약 정보 -->
+    <!-- 이미지 분석후 파일 데이터 추가 -->
+    <div class="info_wrap">
+      <div class="info">
+        <div class="details">
+          <p><strong>날짜</strong><span>{{ reservationDate }}</span></p>
+          <p><strong>장소</strong><span>{{ reservationStore }}</span></p>
+          <p><strong>테마</strong><span>{{ reservationEp }}</span></p>
+        </div>
+      </div>
+    </div>
+    <button class="share_btn" @click="togethrPlay">함께 할게요!</button>
   </div>
 </template>
 
