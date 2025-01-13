@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import { sessionUtil } from '~/services/sessionUtil';
+import { useLoadingStore } from '~/stores/loading'
+
+// 로딩 store 연결
+const loadingStore = useLoadingStore();
 
 const isDragging = ref(false);
 const file = ref(null);
@@ -75,7 +79,8 @@ const kakaoShare = () => {
 
 //이미지 정보 가져오기
 const setReservationData = async (file) => {
-
+  //로딩 상태 변화
+  loadingStore.loadingUpdate(true);
 
   try {
     // 파일을 Base64로 변환
@@ -182,7 +187,8 @@ const setReservationData = async (file) => {
     console.error("업로드 중 에러 발생:", error);
     alert("업로드 중 오류가 발생했습니다!");
   } finally {
-    // this.isUploading = false;
+    //로딩 상태 변화
+    loadingStore.loadingUpdate(false);
   }
 
 
@@ -286,13 +292,17 @@ onMounted(async ()=>{
   padding: 20px 20px 10px;
   margin: 20px auto 0px;
   width: 300px;
-  height: 300px;
+  min-height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: border-color 0.3s;
   font-size: 16px;
+}
+
+.dropzone img{
+  max-width:300px;
 }
 
 hr {

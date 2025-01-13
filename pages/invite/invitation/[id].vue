@@ -2,9 +2,12 @@
 import { ref } from "vue";
 
 const invitation = ref(false);
-import { roomService } from '/services/room/roomService'
-
+import { roomService } from '/services/room/roomService';
 import { useRoute } from 'vue-router';
+import { useLoadingStore } from '~/stores/loading'
+
+// 로딩 store 연결
+const loadingStore = useLoadingStore();
 
 const route = useRoute();
 const id = route.params.id;
@@ -25,14 +28,23 @@ onMounted(() => {
 const { getRoom } = roomService();
 //이미지 정보 가져오기
 const getReservationData = async () => {
+  loadingStore.loadingUpdate(true);
 
-  const roomInfo = await getRoom({id:id});
-  console.log(roomInfo);
-  //더미 데이터
-  reservationLeader.value = "노티미"
-  reservationDate.value = "2025. 1. 11 (토) 오후 5시"
-  reservationStore.value = "KEYESCAPE 홍대점"
-  reservationEp.value = "Ep.4 주인 없는 낡은 서점"
+  try {
+    const roomInfo = await getRoom({id:id});
+    console.log(roomInfo);
+    //더미 데이터
+    reservationLeader.value = "노티미"
+    reservationDate.value = "2025. 1. 11 (토) 오후 5시"
+    reservationStore.value = "KEYESCAPE 홍대점"
+    reservationEp.value = "Ep.4 주인 없는 낡은 서점"
+  } catch (error) {
+    console.error("초대 정보 가져오는 중 에러 발생:", error);
+    alert("초대정보 로드중 오류가 발생했습니다!");
+  } finally {
+    //로딩 상태 변화
+    loadingStore.loadingUpdate(false);
+  }
 }
 
 // 초대한 게임 참석하기
