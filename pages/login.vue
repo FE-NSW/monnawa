@@ -68,7 +68,8 @@ const deleteCookie = () => {
   text-align: center;
   padding: 20px;
   font-family: 'Noto Sans', sans-serif;
-  height:100vh
+  height:100vh;
+  box-sizing: border-box;
 }
 
 .monnawa_message{
