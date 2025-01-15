@@ -46,15 +46,17 @@ const deleteCookie = () => {
 
 <template>
   <div class="container login">
-    <div class="monnawa_message">
-      <strong>방탈출 더 쉽고 특별하게</strong>
-      <p>MONNAWA로 함께 플레이하자!</p>
-    </div>
+    <div class="logmin_wrap">
+      <div class="monnawa_message">
+        <strong>방탈출 더 쉽고 특별하게</strong>
+        <p>MONNAWA로 함께 플레이하자!</p>
+      </div>
 
-    <div class="card">
-      <div class="inner">
-        <div class="front"><img class="card" src="@/assets/images/invite/card.png" alt="카드 앞면" width="197" /></div>
-        <div class="back"><img class="card" src="@/assets/images/invite/card_back.png" alt="카드 뒷면" width="197" /></div>
+      <div class="card">
+        <div class="inner">
+          <div class="front"><img class="card" src="@/assets/images/invite/card.png" alt="카드 앞면" width="197" /></div>
+          <div class="back"><img class="card" src="@/assets/images/invite/card_back.png" alt="카드 뒷면" width="197" /></div>
+        </div>
       </div>
     </div>
 
