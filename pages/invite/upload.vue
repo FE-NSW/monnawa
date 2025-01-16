@@ -191,11 +191,6 @@ const setReservationData = async (file) => {
     loadingStore.loadingUpdate(false);
   }
 
-
-//   //더미 데이터
-//   reservationDate.value = "2025. 1. 11 (토) 오후 5시"
-//   reservationStore.value = "KEYESCAPE 홍대점"
-//   reservationEp.value = "Ep.4 주인 없는 낡은 서점"
 }
 
 const convertFileToBase64 =  (file) => {

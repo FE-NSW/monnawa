@@ -24,3 +24,14 @@ body{
     margin:0;
   }
 }
+
+
+
+.swiper-pagination .swiper-pagination-bullet {
+  background-color: #FFE1CE !important;
+  opacity: 1;
+}
+
+.swiper-pagination .swiper-pagination-bullet-active {
+  background-color: #FF624E !important;
+}

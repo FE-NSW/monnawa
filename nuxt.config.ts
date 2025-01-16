@@ -11,6 +11,10 @@ export default defineNuxtConfig({
    modules: ['@nuxtjs/google-fonts'],
   css: [
     '@/assets/css/global.css',
-  ]
+    'swiper/swiper-bundle.css'
+  ],
+  build: {
+    transpile: ['swiper']
+  }
 
 })
