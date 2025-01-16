@@ -8,7 +8,7 @@
 .loading_area{
   width:100%;
   height:100vh;
-  background-color: #fff;
+  background-color: rgba(74,74,74, 0.5);
   position: absolute;
   left:0;
   top:0;
